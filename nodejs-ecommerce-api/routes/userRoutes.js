@@ -8,18 +8,10 @@ import {
 import {
   loginUserCtrl,
   registerUserCtrl,
+  getUserProfileCtrl,
 } from "../controllers/userControllers.js";
-userRouter.post(
-  "/api/v1/users/register",
-  userRegisterValidator,
-  runValidation,
-  registerUserCtrl
-);
-userRouter.post(
-  "/api/v1/users/login",
-  userLoginValidator,
-  runValidation,
-  loginUserCtrl
-);
+userRouter.post("/register", userRegisterValidator, runValidation,registerUserCtrl);
+userRouter.post("/login", userLoginValidator, runValidation, loginUserCtrl);
+userRouter.get("/profile", getUserProfileCtrl);
 
 export default userRouter;

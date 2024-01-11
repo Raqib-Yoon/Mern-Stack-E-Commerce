@@ -1,5 +1,6 @@
 import User from "../model/User.js";
 import bCrypt from "bcryptjs";
+import { generateToken } from "../utils/generateToken.js";
 
 export const registerUserCtrl = async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -45,6 +46,15 @@ export const loginUserCtrl = async (req, res) => {
 
   res.json({
     user,
+    token: generateToken(user.id),
     message: "Successfull login",
+  });
+};
+
+export const getUserProfileCtrl = (req, res) => {
+  const headers = req.headers["authorization"];
+  res.json({
+    headers,
+    message: "Get user profile",
   });
 };
