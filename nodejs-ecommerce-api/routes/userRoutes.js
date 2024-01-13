@@ -10,8 +10,9 @@ import {
   registerUserCtrl,
   getUserProfileCtrl,
 } from "../controllers/userControllers.js";
+import isLoggedIn from "../middlewares/isLoggedIn.js"
 userRouter.post("/register", userRegisterValidator, runValidation,registerUserCtrl);
 userRouter.post("/login", userLoginValidator, runValidation, loginUserCtrl);
-userRouter.get("/profile", getUserProfileCtrl);
+userRouter.get("/profile",isLoggedIn, getUserProfileCtrl);
 
 export default userRouter;

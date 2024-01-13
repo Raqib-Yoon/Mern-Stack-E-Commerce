@@ -1,7 +1,10 @@
 import User from "../model/User.js";
 import bCrypt from "bcryptjs";
-import { generateToken } from "../utils/generateToken.js";
-
+import {
+  generateToken,
+  getTokenFromHeader,
+  verifyToken,
+} from "../utils/index.js";
 export const registerUserCtrl = async (req, res) => {
   const { fullname, email, password } = req.body;
   //   check if user exist
@@ -51,10 +54,16 @@ export const loginUserCtrl = async (req, res) => {
   });
 };
 
-export const getUserProfileCtrl = (req, res) => {
-  const headers = req.headers["authorization"];
-  res.json({
-    headers,
-    message: "Get user profile",
+export const getUserProfileCtrl = async (req, res) => {
+  const token = getTokenFromHeader(req);
+  const verified = verifyToken(token);
+  const user = await User.findById(req.userAuthId).select({
+    password: 0,
   });
+  if (!user) {
+    return res.status(400).json({
+      error: "User not found.",
+    });
+  }
+  res.json({ user, message: "Get user profile" });
 };
