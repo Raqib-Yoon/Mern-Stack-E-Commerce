@@ -38,11 +38,33 @@ export const createProductCtrl = async (req, res, next) => {
 };
 
 export const getProductsCtrl = async (req, res) => {
-  const products = await Product.find();
-  console.log(req)
+  let productQuery = Product.find();
+  if (req.query.name) {
+    productQuery = productQuery.find({
+      name: { $regex: req.query.name, $options: "i" },
+    });
+  }
+  if (req.query.color) {
+    productQuery = productQuery.find({
+      colors: { $regex: req.query.color, $options: "i" },
+    });
+  }
+  if (req.query.size) {
+    productQuery = productQuery.find({
+      sizes: { $regex: req.query.size, $options: "i" },
+    });
+  }
+  // filter product by price
+  if (req.query.price) {
+    let productPrice = req.query.price.split("-");
+    console.log(productPrice);
+    productQuery = productQuery.find({
+      price: { $gte: productPrice[0], $lte: productPrice[1] },
+    });
+  }
+  const product = await productQuery;
   res.json({
-    request,
     message: "Success",
-    products,
+    product,
   });
 };
