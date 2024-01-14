@@ -37,6 +37,9 @@ export const createProductCtrl = async (req, res, next) => {
   });
 };
 
+
+// get products
+
 export const getProductsCtrl = async (req, res) => {
   let productQuery = Product.find();
   if (req.query.name) {
