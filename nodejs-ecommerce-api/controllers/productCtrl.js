@@ -62,8 +62,36 @@ export const getProductsCtrl = async (req, res) => {
       price: { $gte: productPrice[0], $lte: productPrice[1] },
     });
   }
+
+  // pagination implement
+  const page = parseInt(req.query.page) ? parseInt(req.query.page) : 1;
+  const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 1;
+  const skip = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total =await Product.countDocuments();
+  productQuery = productQuery.skip(skip).limit(limit);
+console.log("this is the total ",total)
+  // pagination result =
+  const pagination = {};
+  if (endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit,
+    };
+  }
+
+  if (skip > 0) {
+    pagination.prev = {
+      page: page - 1,
+      limit,
+    };
+  }
+
   const product = await productQuery;
   res.json({
+    // total,
+    pagination,
+    // result: product.length,
     message: "Success",
     product,
   });
