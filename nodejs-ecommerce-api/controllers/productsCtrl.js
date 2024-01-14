@@ -37,7 +37,6 @@ export const createProductCtrl = async (req, res, next) => {
   });
 };
 
-
 // get products
 
 export const getProductsCtrl = async (req, res) => {
@@ -71,9 +70,9 @@ export const getProductsCtrl = async (req, res) => {
   const limit = parseInt(req.query.limit) ? parseInt(req.query.limit) : 1;
   const skip = (page - 1) * limit;
   const endIndex = page * limit;
-  const total =await Product.countDocuments();
+  const total = await Product.countDocuments();
   productQuery = productQuery.skip(skip).limit(limit);
-console.log("this is the total ",total)
+  console.log("this is the total ", total);
   // pagination result =
   const pagination = {};
   if (endIndex < total) {
@@ -97,5 +96,56 @@ console.log("this is the total ",total)
     // result: product.length,
     message: "Success",
     product,
+  });
+};
+// get a single product
+export const getProductCtrl = async (req, res) => {
+  const id = req.params.id;
+  const product = await Product.findById(id);
+  if (!product) {
+    return res.status(400).json({
+      error: "Product not found",
+    });
+  }
+  res.json({
+    message: "Product finded successfully.",
+    product,
+  });
+};
+
+// update a single product
+export const updateProductCtrl = async (req, res) => {
+  const id = req.params.id;
+  const { name, descrption, brand, category, sizes, colors, price, totalQty } =
+    req.body;
+
+  const updatedProduct = await Product.findByIdAndUpdate(
+    id,
+    {
+      name,
+      descrption,
+      brand,
+      category,
+      sizes,
+      colors,
+      price,
+      totalQty,
+    },
+    {
+      new: true,
+    }
+  );
+
+  res.json({
+    updatedProduct,
+    message: "Product updated sucessfull.",
+  });
+};
+
+// update a single product
+export const deleteProductCtrl = async (req, res) => {
+  await Product.findByIdAndDelete(req.params.id);
+  res.json({
+    message: "Product deleted sucessfull.",
   });
 };
