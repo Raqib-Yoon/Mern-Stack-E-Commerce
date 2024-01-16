@@ -51,7 +51,7 @@ export const getSingleBrand = async (req, res) => {
   }
 };
 
-// update only one brand by id
+// update single brand by id
 export const deleteBrand = async (req, res) => {
   try {
     const brand = await Brand.findByIdAndDelete(req.params.id);
