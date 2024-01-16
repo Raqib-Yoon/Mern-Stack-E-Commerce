@@ -18,14 +18,13 @@ export const createReview = async (req, res) => {
     });
 
     // resave id of the review in this product
-    console.log(createReview)
     findProduct.reviews.push(createdReview._id);
     await findProduct.save();
 
     res.json({
       createdReview,
       findProduct,
-      message: "hello world",
+      message: "review created successfull.",
     });
   } catch (error) {
     res.status(400).json({
