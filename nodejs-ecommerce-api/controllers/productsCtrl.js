@@ -1,5 +1,7 @@
 import Category from "../model/Category.js";
 import Product from "../model/Product.js";
+import Brand from "../model/Brand.js";
+import Color from "../model/Color.js";
 
 export const createProductCtrl = async (req, res, next) => {
   const {
@@ -20,12 +22,26 @@ export const createProductCtrl = async (req, res, next) => {
       error: "Product already exist.",
     });
   }
-  // check if the category exist
 
+  // check if the category exist
   const categoryExist = await Category.findOne({ name: category });
   if (!categoryExist) {
     return res.status(400).json({
       error: "Category dont exist please add the category first.",
+    });
+  }
+  // check if the brand exist
+  const brandExist = await Brand.findOne({ name: brand });
+  if (!brandExist) {
+    return res.status(400).json({
+      error: "brand dont exist please add the brand first.",
+    });
+  }
+  // check if the color exist
+  const colorExist = await Color.findOne({ name: colors });
+  if (!colorExist) {
+    return res.status(400).json({
+      error: "color dont exist please add the color first.",
     });
   }
   // save the product
@@ -46,6 +62,17 @@ export const createProductCtrl = async (req, res, next) => {
   // resave the category
   await categoryExist.save();
 
+  // save the product id in the product part of the brand
+  brandExist.products.push(product._id);
+  // resave the brand
+  await brandExist.save();
+
+  // save the product id in the product part of the color
+  colorExist.products.push(product._id);
+  // resave the brand
+  await colorExist.save();
+
+  // send the response
   res.status(201).json({
     message: "Prodcut created successfully.",
     product,
@@ -87,7 +114,6 @@ export const getProductsCtrl = async (req, res) => {
   const endIndex = page * limit;
   const total = await Product.countDocuments();
   productQuery = productQuery.skip(skip).limit(limit);
-  console.log("this is the total ", total);
   // pagination result =
   const pagination = {};
   if (endIndex < total) {
