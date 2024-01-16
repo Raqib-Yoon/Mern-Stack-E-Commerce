@@ -17,6 +17,7 @@ export const createReview = async (req, res) => {
       user: req.userAuthId,
     });
 
+    // resave id of the review in this product
     findProduct.reviews.push(createdReview._id);
     await findProduct.save();
 
