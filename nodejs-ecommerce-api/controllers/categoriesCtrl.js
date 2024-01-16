@@ -11,7 +11,7 @@ export const createCategory = async (req, res) => {
     });
   }
   const category = await Category.create({
-    name,
+    name: name.toLowerCase(),
     user: req.userAuthId,
   });
 
@@ -22,7 +22,6 @@ export const createCategory = async (req, res) => {
 };
 
 // get all the categories
-
 export const getAllCategories = async (req, res) => {
   // check if category exist or not
   const allCategoreis = await Category.find();
@@ -39,9 +38,52 @@ export const getAllCategories = async (req, res) => {
 
 // get only one category by id
 export const getSingleCategory = async (req, res) => {
-  const category = await Category.findById(req.params.id);
-  res.status(201).json({
-    message: "category fetched successfully.",
-    category,
-  });
+  try {
+    const category = await Category.findById(req.params.id);
+    res.status(201).json({
+      message: "category fetched successfully.",
+      category,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      error: "no category found.",
+    });
+  }
+};
+
+// update only one category by id
+export const deleteCategory = async (req, res) => {
+  try {
+    const category = await Category.findByIdAndDelete(req.params.id);
+    if (!category) {
+      return new error();
+    } else {
+      res.json({
+        category,
+        message: "category deleted successfull.",
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      error: "no category found.",
+    });
+  }
+};
+// update only one category by id
+export const updateCategory = async (req, res) => {
+  try {
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      { name: req.body.name },
+      { new: true }
+    );
+    res.status(201).json({
+      message: "category updated successfully.",
+      category,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      error: "no category found.",
+    });
+  }
 };

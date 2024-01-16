@@ -1,3 +1,4 @@
+import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 
 export const createProductCtrl = async (req, res, next) => {
@@ -19,6 +20,15 @@ export const createProductCtrl = async (req, res, next) => {
       error: "Product already exist.",
     });
   }
+  // check if the category exist
+
+  const categoryExist = await Category.findOne({ name: category });
+  if (!categoryExist) {
+    return res.status(400).json({
+      error: "Category dont exist please add the category first.",
+    });
+  }
+  // save the product
   const product = await Product.create({
     name,
     descrption,
@@ -30,6 +40,11 @@ export const createProductCtrl = async (req, res, next) => {
     price,
     totalQty,
   });
+
+  // save the product id in the product part of the category
+  categoryExist.products.push(product._id);
+  // resave the category
+  await categoryExist.save();
 
   res.status(201).json({
     message: "Prodcut created successfully.",

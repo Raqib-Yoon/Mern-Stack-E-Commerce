@@ -6,6 +6,7 @@ const app = express();
 import userRouter from "../routes/userRoutes.js";
 import productRouter from "../routes/productRoutes.js";
 import categoryRouter from "../routes/categoryRoutes.js";
+import brandRouter from "../routes/brandRoutes.js";
 
 // Database Connect...
 dbConnect();
@@ -16,5 +17,6 @@ app.use(express.json());
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/categories", categoryRouter);
+app.use("/api/v1/brands", brandRouter);
 
 export default app;
