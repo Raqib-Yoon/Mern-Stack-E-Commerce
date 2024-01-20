@@ -43,7 +43,7 @@ const ProductSchema = schema(
     reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Reviews",
+        ref: "Review",
       },
     ],
     price: {
