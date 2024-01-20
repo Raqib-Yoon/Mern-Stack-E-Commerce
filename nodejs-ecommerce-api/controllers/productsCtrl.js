@@ -2,6 +2,7 @@ import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 import Brand from "../model/Brand.js";
 import Color from "../model/Color.js";
+import { set } from "mongoose";
 
 export const createProductCtrl = async (req, res, next) => {
   const {
@@ -81,7 +82,7 @@ export const createProductCtrl = async (req, res, next) => {
 
 // get products
 
-export const getProductsCtrl = async (req, res) => {
+export const getAllProductsCtrl = async (req, res) => {
   let productQuery = Product.find();
   if (req.query.name) {
     productQuery = productQuery.find({
@@ -140,9 +141,8 @@ export const getProductsCtrl = async (req, res) => {
   });
 };
 // get a single product
-export const getProductCtrl = async (req, res) => {
-  const id = req.params.id;
-  const product = await Product.findById(id);
+export const getSingleProductCtrl = async (req, res) => {
+  const product = await Product.findById(req.params.id).populate("reviews");
   if (!product) {
     return res.status(400).json({
       error: "Product not found",
