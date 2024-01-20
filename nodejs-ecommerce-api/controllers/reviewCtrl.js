@@ -4,8 +4,8 @@ import Product from "../model/Product.js";
 export const createReview = async (req, res) => {
   const { rating, message } = req.body;
   try {
-    const findProduct = await Product.findById(req.params.productId);
-    if (!findProduct) {
+    const productExist = await Product.findById(req.params.productId);
+    if (!productExist) {
       return res.status(400).json({
         error: "Product not found.",
       });
@@ -13,17 +13,17 @@ export const createReview = async (req, res) => {
     const createdReview = await Review.create({
       message,
       rating,
-      product: findProduct._id,
+      product: productExist._id,
       user: req.userAuthId,
     });
 
     // resave id of the review in this product
-    findProduct.reviews.push(createdReview._id);
-    await findProduct.save();
+    productExist.reviews.push(createdReview._id);
+    await productExist.save();
 
     res.json({
       createdReview,
-      findProduct,
+      productExist,
       message: "review created successfull.",
     });
   } catch (error) {
