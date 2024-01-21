@@ -12,16 +12,16 @@ export const createReview = async (req, res) => {
         error: "Product not found.",
       });
     }
-    const hasReviewed = await productExist?.reviews?.find((review) => {
-      return review?.user.toString() === req?.userAuthId.toString();
-    });
-    console.log(hasReviewed);
+    // const hasReviewed = await productExist?.reviews?.find((review) => {
+    //   return review?.user.toString() === req?.userAuthId.toString();
+    // });
+    // console.log(hasReviewed);
 
-    if (hasReviewed) {
-      return res.status(400).json({
-        error: "Product has already been reviewed",
-      });
-    }
+    // if (hasReviewed) {
+    //   return res.status(400).json({
+    //     error: "Product has already been reviewed",
+    //   });
+    // }
 
     const createdReview = await Review.create({
       message,
@@ -33,10 +33,14 @@ export const createReview = async (req, res) => {
     // resave id of the review in this product
     productExist.reviews.push(createdReview._id);
     await productExist.save();
+    
+    const newProductExist = await Product.findById(
+      req.params.productId
+    ).populate("reviews");
 
     res.json({
       createdReview,
-      productExist,
+      newProductExist,
       message: "review created successfull.",
     });
   } catch (error) {
