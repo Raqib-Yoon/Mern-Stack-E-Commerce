@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { model } from "mongoose";
 const schema = mongoose.Schema;
 
 const ProductSchema = schema(
@@ -65,7 +65,27 @@ const ProductSchema = schema(
     toJSON: { virtuals: true },
   }
 );
-
+// get the total reviews
+ProductSchema.virtual("totalReviews").get(function () {
+  const product = this;
+  const totalReviews = product?.reviews?.length;
+  return totalReviews;
+});
+// get the average ratings reviews
+ProductSchema.virtual("averageRating").get(function () {
+  let totalRatings = 0;
+  const product = this;
+  product?.reviews?.forEach((review) => {
+    // find all the ratings
+    totalRatings += review.rating;
+  });
+  // calculate average ratings
+  const averageRating = Number(totalRatings / product?.reviews?.length).toFixed(
+    1
+  );
+  return averageRating;
+});
+// introduce product schema to the mongodb database
 const Product = mongoose.model("Product", ProductSchema);
-
+// export product model
 export default Product;
