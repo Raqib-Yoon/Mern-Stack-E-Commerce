@@ -9,7 +9,7 @@ import {
   brandRouter,
   colorRouter,
   categoryRouter,
-  reviewRouter,
+  reviewRouter,orderRouter
 } from "../routes/index.js";
 
 // Database Connect...
@@ -24,5 +24,6 @@ app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/brands", brandRouter);
 app.use("/api/v1/colors", colorRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/orders", orderRouter);
 
 export default app;
