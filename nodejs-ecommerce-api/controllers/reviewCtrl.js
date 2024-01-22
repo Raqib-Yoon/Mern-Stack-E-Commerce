@@ -1,4 +1,4 @@
-import Review from "../model/review.js";
+import Review from "../model/Review.js";
 import Product from "../model/Product.js";
 
 export const createReview = async (req, res) => {
@@ -29,7 +29,6 @@ export const createReview = async (req, res) => {
       product: productExist._id,
       user: req.userAuthId,
     });
-
     // resave id of the review in this product
     productExist.reviews.push(createdReview._id);
     await productExist.save();
