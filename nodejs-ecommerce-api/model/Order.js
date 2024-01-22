@@ -1,6 +1,6 @@
 import mongoose, { mongo } from "mongoose";
 const Schema = mongoose.Schema;
-// generate random strings
+// generate random string
 const randomTxt = Math.random().toString(36).substring(7).toLocaleUpperCase();
 const randomNumbers = Math.floor(1000 + Math.random() * 90000);
 const orderSchema = Schema(
