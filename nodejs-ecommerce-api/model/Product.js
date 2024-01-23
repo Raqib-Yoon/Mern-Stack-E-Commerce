@@ -65,6 +65,14 @@ const ProductSchema = schema(
     toJSON: { virtuals: true },
   }
 );
+
+// Virtauls
+// Find the total Quantity left of the product
+ProductSchema.virtual("totalQuantityLeft").get(function () {
+  const product = this;
+  const totalQuantityLeft = product?.totalQty - product?.totalSold;
+  return totalQuantityLeft;
+});
 // get the total reviews
 ProductSchema.virtual("totalReviews").get(function () {
   const product = this;
