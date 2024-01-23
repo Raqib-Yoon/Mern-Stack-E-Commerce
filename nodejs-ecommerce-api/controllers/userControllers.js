@@ -40,7 +40,6 @@ export const loginUserCtrl = async (req, res) => {
   }
   // check if passwords match
   const isMatch = await bCrypt.compare(password, user.password);
-  console.log(isMatch);
   if (!isMatch) {
     return res.status(400).json({
       error: "Passwords do not match",
@@ -66,4 +65,41 @@ export const getUserProfileCtrl = async (req, res) => {
     });
   }
   res.json({ user, message: "Get user profile" });
+};
+
+export const updateShippingAddress = async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    city,
+    address,
+    postalCode,
+    province,
+    country,
+    phone,
+  } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.userAuthId,
+    {
+      shippingAddress: {
+        firstName,
+        lastName,
+        address,
+        city,
+        postalCode,
+        province,
+        phone,
+      },
+      hasShippingAddress: true,
+    },
+    {
+      new: true,
+    }
+  );
+
+  // user?.save();
+  res.json({
+    user,
+    message: "User Shipping Address Successfully Updated.",
+  });
 };
