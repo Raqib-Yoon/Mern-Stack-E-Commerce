@@ -2,20 +2,11 @@ import Category from "../model/Category.js";
 import Product from "../model/Product.js";
 import Brand from "../model/Brand.js";
 import Color from "../model/Color.js";
-import { set } from "mongoose";
 
-export const createProductCtrl = async (req, res, next) => {
-  const {
-    name,
-    descrption,
-    brand,
-    category,
-    sizes,
-    colors,
-    user,
-    price,
-    totalQty,
-  } = req.body;
+export const createProductCtrl = async (req, res) => {
+  const { name, descrption, brand, category, sizes, colors, price, totalQty } =
+    req.body;
+  console.log(req.body);
   // check if product exist or not
   const productExist = await Product.findOne({ name });
   if (productExist) {
@@ -32,14 +23,15 @@ export const createProductCtrl = async (req, res, next) => {
     });
   }
   // check if the brand exist
-  const brandExist = await Brand.findOne({ name: brand });
+  const brandExist = await Brand.findOne({ name: brand.toLowerCase() });
+  console.log(brandExist);
   if (!brandExist) {
     return res.status(400).json({
       error: "brand dont exist please add the brand first.",
     });
   }
   // check if the color exist
-  const colorExist = await Color.findOne({ name: colors });
+  const colorExist = await Color.findOne({ name: colors.toLowerCase() });
   if (!colorExist) {
     return res.status(400).json({
       error: "color dont exist please add the color first.",
@@ -49,27 +41,27 @@ export const createProductCtrl = async (req, res, next) => {
   const product = await Product.create({
     name,
     descrption,
-    brand,
-    category,
+    brand: brand.toLowerCase(),
+    category: category.toLowerCase(),
     sizes,
-    colors,
+    colors: colors.toLowerCase(),
     user: req.userAuthId,
     price,
     totalQty,
   });
 
   // save the product id in the product part of the category
-  categoryExist.products.push(product._id);
+  categoryExist?.products?.push(product._id);
   // resave the category
   await categoryExist.save();
 
   // save the product id in the product part of the brand
-  brandExist.products.push(product._id);
+  brandExist?.products?.push(product._id);
   // resave the brand
   await brandExist.save();
 
   // save the product id in the product part of the color
-  colorExist.products.push(product._id);
+  colorExist?.products?.push(product._id);
   // resave the brand
   await colorExist.save();
 
@@ -133,9 +125,8 @@ export const getAllProductsCtrl = async (req, res) => {
 
   const product = await productQuery;
   res.json({
-    // total,
     pagination,
-    // result: product.length,
+    result: product.length,
     message: "Success",
     product,
   });
