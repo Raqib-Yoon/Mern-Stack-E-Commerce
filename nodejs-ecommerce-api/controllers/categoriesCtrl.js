@@ -36,7 +36,7 @@ export const getAllCategories = async (req, res) => {
   });
 };
 
-// get only one category by id
+// get single category by id
 export const getSingleCategory = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
