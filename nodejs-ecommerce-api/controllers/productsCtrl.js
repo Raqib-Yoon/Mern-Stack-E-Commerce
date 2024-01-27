@@ -50,7 +50,7 @@ export const createProductCtrl = async (req, res) => {
     totalQty,
   });
 
-  // save the product id in the product part of the category
+  // save the product id in the product part of the categor
   categoryExist?.products?.push(product._id);
   // resave the category
   await categoryExist.save();
