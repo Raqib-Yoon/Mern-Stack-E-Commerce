@@ -20,7 +20,7 @@ export const createReview = async (req, res) => {
     // if (hasReviewed) {
     //   return res.status(400).json({
     //     error: "Product has already been reviewed",
-    //   });
+    //   })
     // }
 
     const createdReview = await Review.create({
