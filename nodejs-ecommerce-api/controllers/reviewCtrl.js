@@ -15,8 +15,6 @@ export const createReview = async (req, res) => {
     const hasReviewed = await productExist?.reviews?.find((review) => {
       return review?.user.toString() === req?.userAuthId.toString();
     });
-    console.log(hasReviewed);
-
     if (hasReviewed) {
       return res.status(400).json({
         error: "Product has already been reviewed",
