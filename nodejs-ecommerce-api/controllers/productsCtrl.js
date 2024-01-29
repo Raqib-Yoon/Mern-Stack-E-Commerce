@@ -5,7 +5,7 @@ import Color from "../model/Color.js";
 
 export const createProductCtrl = async (req, res) => {
   const { name, descrption, brand, category, sizes, colors, price, totalQty } =
-    req.body;
+    req.body
   console.log(req.body);
   // check if product exist or not
   const productExist = await Product.findOne({ name });
