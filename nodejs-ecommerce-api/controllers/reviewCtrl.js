@@ -12,16 +12,16 @@ export const createReview = async (req, res) => {
         error: "Product not found.",
       });
     }
-    // const hasReviewed = await productExist?.reviews?.find((review) => {
-    //   return review?.user.toString() === req?.userAuthId.toString();
-    // });
-    // console.log(hasReviewed);
+    const hasReviewed = await productExist?.reviews?.find((review) => {
+      return review?.user.toString() === req?.userAuthId.toString();
+    });
+    console.log(hasReviewed);
 
-    // if (hasReviewed) {
-    //   return res.status(400).json({
-    //     error: "Product has already been reviewed",
-    //   });
-    // }
+    if (hasReviewed) {
+      return res.status(400).json({
+        error: "Product has already been reviewed",
+      });
+    }
 
     const createdReview = await Review.create({
       message,
