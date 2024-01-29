@@ -11,7 +11,7 @@ export const registerUserCtrl = async (req, res) => {
   const user = await User.findOne({ email });
   if (user) {
     return res.status(400).json({
-      error: "User already exists",
+      error: "User already exists.",
     });
   }
   //   hash the passwords
