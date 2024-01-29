@@ -1,4 +1,4 @@
-import Brand from "../model/Brand.js";
+import Brand from "../model/Brand.js"
 
 // create a category
 export const createBrand = async (req, res) => {
