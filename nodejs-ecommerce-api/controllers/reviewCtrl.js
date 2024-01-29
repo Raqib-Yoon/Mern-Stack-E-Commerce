@@ -9,7 +9,7 @@ export const createReview = async (req, res) => {
     );
     if (!productExist) {
       return res.status(400).json({
-        error: "Product not found.",
+        error: "Product not found",
       });
     }
     const hasReviewed = await productExist?.reviews?.find((review) => {
