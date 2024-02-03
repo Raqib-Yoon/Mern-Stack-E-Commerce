@@ -5,7 +5,24 @@ import Stripe from "stripe";
 import dotenv from "dotenv";
 dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+import Coupon from "../model/Coupon.js";
+
 export const createOrder = async (req, res) => {
+  const { coupon } = req?.query;
+  // check if coupon expired or not
+  const couponFound = await Coupon.findOne({ code: coupon?.toUpperCase() });
+  if (couponFound?.isExpired) {
+    return res.status(400).json({
+      error: "Coupon has ben exipred",
+    });
+  }
+  if (!couponFound) {
+    return res.status(400).json({
+      error: "Coupon does not exist",
+    });
+  }
+
+  const discount = couponFound?.discount / 100;
   //    find the user that wnat the order
   const user = await User.findById(req.userAuthId);
   //    Get the payload (customer, orderItems, shippingAddress, totalPrice)
@@ -17,12 +34,12 @@ export const createOrder = async (req, res) => {
       error: "Order is empty.",
     });
   }
-  //    place/create order -save into DataBase
+  //    place/create order nad save into DataBase
   const order = await Order.create({
     user: user?._id,
     orderItems,
     shippingAddress,
-    totalPrice,
+    totalPrice: couponFound ? total - totalPrice * discount : totalPrice,
   });
   //    Update the product qty
   const products = await Product.find({ _id: { $in: orderItems } });
