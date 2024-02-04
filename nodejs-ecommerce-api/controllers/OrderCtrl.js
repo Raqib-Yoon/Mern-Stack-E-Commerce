@@ -1,8 +1,24 @@
 import Order from "../model/Order.js";
 import User from "../model/User.js";
 import Product from "../model/Product.js";
+import Coupon from "../model/Coupon.js";
 
 export const createOrder = async (req, res) => {
+  const { coupon } = req?.query;
+  // check if coupon expired or not
+  const couponFound = await Coupon.findOne({ code: coupon?.toUpperCase() });
+  if (couponFound?.isExpired) {
+    return res.status(400).json({
+      error: "Coupon has ben exipred",
+    });
+  }
+  if (!couponFound) {
+    return res.status(400).json({
+      error: "Coupon does not exist",
+    });
+  }
+
+  const discount = couponFound?.discount / 100;
   //    find the user that wnat the order
   const user = await User.findById(req.userAuthId);
   //    Get the payload (customer, orderItems, shippingAddress, totalPrice)
@@ -18,7 +34,7 @@ export const createOrder = async (req, res) => {
     user: user?._id,
     orderItems,
     shippingAddress,
-    totalPrice,
+    totalPrice: couponFound ? total - totalPrice * discount : totalPrice,
   });
   //    Update the product qty
   const products = await Product.find({ _id: { $in: orderItems } });
