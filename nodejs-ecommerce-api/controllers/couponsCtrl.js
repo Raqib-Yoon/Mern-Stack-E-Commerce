@@ -18,7 +18,7 @@ export const createCoupon = async (req, res) => {
   // if coupon don't exist then create a new coupon
   const coupon = await Coupon.create({
     user: req.userAuthId,
-    code,
+    code: code.toUpperCase(),
     startDate,
     endDate,
     discount,
