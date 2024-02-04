@@ -29,7 +29,7 @@ export const createOrder = async (req, res) => {
       error: "Order is empty.",
     });
   }
-  //    place/create order -save into DataBase
+  //    place/create order nad save into DataBase
   const order = await Order.create({
     user: user?._id,
     orderItems,
