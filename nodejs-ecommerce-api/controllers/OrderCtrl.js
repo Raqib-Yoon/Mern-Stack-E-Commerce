@@ -12,7 +12,7 @@ export const createOrder = async (req, res) => {
       error: "Coupon has ben exipred",
     });
   }
-  if (!couponFound) {
+  if (coupon && !couponFound) {
     return res.status(400).json({
       error: "Coupon does not exist",
     });
@@ -34,7 +34,7 @@ export const createOrder = async (req, res) => {
     user: user?._id,
     orderItems,
     shippingAddress,
-    totalPrice: couponFound ? total - totalPrice * discount : totalPrice,
+    totalPrice: couponFound ? totalPrice - totalPrice * discount : totalPrice,
   });
   //    Update the product qty
   const products = await Product.find({ _id: { $in: orderItems } });
@@ -55,9 +55,7 @@ export const createOrder = async (req, res) => {
   //    Update the user Order
   res.json({
     // user,
-    orderItems,
-    shippingAddress,
-    totalPrice,
+    order,
     msg: "create order",
   });
 };
