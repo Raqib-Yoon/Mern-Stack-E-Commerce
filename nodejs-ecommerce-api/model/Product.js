@@ -37,7 +37,7 @@ const ProductSchema = schema(
     images: [
       {
         type: String,
-        default: "images link here from google or else",
+        required: true,
       },
     ],
     reviews: [
