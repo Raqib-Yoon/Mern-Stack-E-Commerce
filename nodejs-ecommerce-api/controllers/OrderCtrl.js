@@ -98,3 +98,51 @@ export const createOrder = async (req, res) => {
   // });
 >>>>>>> 7d5570d46f4fbe0a287f274427f0d8a298758dc3
 };
+
+export const getSalesSum = async (req, res) => {
+  const orders = await Order.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalSales: {
+          $sum: "$totalPrice",
+        },
+        minPrice: {
+          $min: "$totalPrice",
+        },
+        maxPrice: {
+          $max: "$totalPrice",
+        },
+        averagePrice: {
+          $avg: "$totalPrice",
+        },
+      },
+    },
+  ]);
+
+  // get today's sales
+  const date = new Date();
+  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const salesToday = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: today,
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalSales: {
+          $sum: "$totalPrice",
+        },
+      },
+    },
+  ]);
+  res.status(200).json({
+    message: "Sum of the Total Price",
+    orders,
+    salesToday,
+  });
+};
