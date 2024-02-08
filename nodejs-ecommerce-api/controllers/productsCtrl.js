@@ -4,8 +4,28 @@ import Brand from "../model/Brand.js";
 import Color from "../model/Color.js";
 
 export const createProductCtrl = async (req, res) => {
+  const { path } = req.file;
+  console.log(path);
+  /**
+   * Paste one or more documents here
+   */
+  const files = {
+    name: "Skirt1",
+    descrption: "Best Skirt in the word.",
+    brand: "gucci",
+    category: "men",
+    sizes: ["M"],
+    colors: ["red"],
+    images: [],
+    reviews: [],
+    price: 200,
+    totalQty: 100,
+    totalSold: 220,
+  };
+  // console.log(req.file)
+  // console.log(req)
   const { name, descrption, brand, category, sizes, colors, price, totalQty } =
-    req.body
+    files;
   console.log(req.body);
   // check if product exist or not
   const productExist = await Product.findOne({ name });
@@ -23,7 +43,7 @@ export const createProductCtrl = async (req, res) => {
     });
   }
   // check if the brand exist
-  const brandExist = await Brand.findOne({ name: brand.toLowerCase() });
+  const brandExist = await Brand.findOne({ name: brand?.toLowerCase() });
   console.log(brandExist);
   if (!brandExist) {
     return res.status(400).json({
@@ -31,7 +51,7 @@ export const createProductCtrl = async (req, res) => {
     });
   }
   // check if the color exist
-  const colorExist = await Color.findOne({ name: colors.toLowerCase() });
+  const colorExist = await Color.findOne({ name: colors });
   if (!colorExist) {
     return res.status(400).json({
       error: "color dont exist please add the color first.",
@@ -41,13 +61,14 @@ export const createProductCtrl = async (req, res) => {
   const product = await Product.create({
     name,
     descrption,
-    brand: brand.toLowerCase(),
-    category: category.toLowerCase(),
+    brand: brand?.toLowerCase(),
+    category: category?.toLowerCase(),
     sizes,
-    colors: colors.toLowerCase(),
-    user: req.userAuthId,
+    colors: colors?.toLowerCase(),
+    user: req?.userAuthId,
     price,
     totalQty,
+    images: path,
   });
 
   // save the product id in the product part of the categor
