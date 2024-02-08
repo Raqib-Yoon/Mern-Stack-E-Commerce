@@ -11,7 +11,7 @@ export const createCategory = async (req, res) => {
     });
   }
   const category = await Category.create({
-    name: name.toLowerCase(),
+    name: name?.toLowerCase(),
     user: req.userAuthId,
   });
 
