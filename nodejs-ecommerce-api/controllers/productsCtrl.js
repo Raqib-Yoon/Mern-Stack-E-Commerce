@@ -3,30 +3,17 @@ import Product from "../model/Product.js";
 import Brand from "../model/Brand.js";
 import Color from "../model/Color.js";
 
+// @desc    Create new product
+// @route   POST /api/v1/products
+// @access  Private/Admin
+
 export const createProductCtrl = async (req, res) => {
-  const { path } = req.file;
-  console.log(path);
-  /**
-   * Paste one or more documents here
-   */
-  const files = {
-    name: "Skirt1",
-    descrption: "Best Skirt in the word.",
-    brand: "gucci",
-    category: "men",
-    sizes: ["M"],
-    colors: ["red"],
-    images: [],
-    reviews: [],
-    price: 200,
-    totalQty: 100,
-    totalSold: 220,
-  };
-  // console.log(req.file)
-  // console.log(req)
   const { name, descrption, brand, category, sizes, colors, price, totalQty } =
-    files;
-  console.log(req.body);
+  req.body;
+console.log(req.body);
+
+const convertedImgs = req.files.map((file) => file?.path);
+
   // check if product exist or not
   const productExist = await Product.findOne({ name });
   if (productExist) {
@@ -44,7 +31,6 @@ export const createProductCtrl = async (req, res) => {
   }
   // check if the brand exist
   const brandExist = await Brand.findOne({ name: brand?.toLowerCase() });
-  console.log(brandExist);
   if (!brandExist) {
     return res.status(400).json({
       error: "brand dont exist please add the brand first.",
@@ -68,7 +54,7 @@ export const createProductCtrl = async (req, res) => {
     user: req?.userAuthId,
     price,
     totalQty,
-    images: path,
+    images: convertedImgs,
   });
 
   // save the product id in the product part of the categor
