@@ -1,26 +1,16 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Login from "./components/users/forms/Login";
+
 const App = () => {
-  const getProducts = async () => {
-    const response = await axios(`${baseURL}/products`);
-    return response.data;
-  };
-  const {
-    isLoading,
-    isError,
-    data: Products,
-  } = useQuery({ queryKey: ["Products"], queryFn: getProducts });
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (isError) {
-    return <div>{data.error}</div>;
-  }
   return (
-    <>
-      <p>{Products}</p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<div>as;dlfkjasd;fl</div>} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
