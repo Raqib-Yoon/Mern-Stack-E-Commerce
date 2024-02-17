@@ -31,6 +31,7 @@ export const registerUserCtrl = async (req, res) => {
 
 export const loginUserCtrl = async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body)
   // check if user is register in our database
   const user = await User.findOne({ email });
   if (!user) {
