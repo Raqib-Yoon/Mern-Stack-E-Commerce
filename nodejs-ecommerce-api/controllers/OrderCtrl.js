@@ -27,7 +27,7 @@ export const createOrder = async (req, res) => {
   const user = await User.findById(req.userAuthId);
   //    Get the payload (customer, orderItems, shippingAddress, totalPrice)
   const { orderItems, shippingAddress, totalPrice } = req.body;
-  console.log(orderItems, shippingAddress, totalPrice )
+  console.log(orderItems, shippingAddress, totalPrice);
   //    check if order is not empty
   if (orderItems.length <= 0) {
     return res.status(400).json({
@@ -82,21 +82,14 @@ export const createOrder = async (req, res) => {
 
   //    payment webhook
   //    Update the user Order
-<<<<<<< HEAD
+
   res.json({
     // user,
-    order,
+    orderItems,
+    shippingAddress,
+    totalPrice,
     msg: "create order",
   });
-=======
-  // res.json({
-  //   // user,
-  //   orderItems,
-  //   shippingAddress,
-  //   totalPrice,
-  //   msg: "create order",
-  // });
->>>>>>> 7d5570d46f4fbe0a287f274427f0d8a298758dc3
 };
 
 export const getSalesSum = async (req, res) => {
